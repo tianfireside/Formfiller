@@ -6,6 +6,7 @@ import re
 
 KEEP_IF_CONTAINS = [
     "Rule 22-3",
+    "Style of Proceeding",
 ]
 
 

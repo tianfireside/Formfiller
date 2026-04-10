@@ -62,7 +62,18 @@ def main():
     doc = Document(raw_path)
     form_number, form_name, province, court = extract_info(doc)
 
-    print(f"\n  Found:")
+    # Ask for any fields that couldn't be extracted
+    if form_number is None:
+        form_number = input("  Form number not found. Enter it: ").strip()
+    if form_name is None:
+        form_name = input("  Form name not found. Enter it: ").strip().replace(" ", "_")
+    if province is None:
+        province = input("  Province not found. Enter it (e.g. BC): ").strip().upper()
+    if court is None:
+        court = input("  Court not found. Enter it (e.g. SCCR, BCPC): ").strip().upper()
+
+    # Confirm all four fields
+    print(f"\n  Please confirm:")
     print(f"    Province:    {province}")
     print(f"    Court:       {court}")
     print(f"    Form number: {form_number}")
