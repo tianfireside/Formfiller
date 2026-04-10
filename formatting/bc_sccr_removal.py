@@ -27,14 +27,27 @@ def rewrite_cell(cell, new_text):
                 run.text = ""
 
 
+def rewrite_para(para, new_text):
+    """Clear all runs and write new_text into the first run."""
+    first_run = None
+    for run in para.runs:
+        if first_run is None:
+            first_run = run
+            first_run.text = new_text
+        else:
+            run.text = ""
+
+
 def run(doc):
-    # Remove [brackets] from paragraphs
+    # Remove [brackets] from paragraphs — stop when Appendix is found
     for para in doc.paragraphs:
-        t = para.text.strip()
-        if re.search(r'\[.*?\]', t):
+        t = para.text
+        if t.strip() == "Appendix":
+            break
+        if re.search(r'\[.*?\]', t, re.DOTALL):
             if not any(keep in t for keep in KEEP_IF_CONTAINS):
-                for r in para.runs:
-                    r.text = re.sub(r'\[.*?\]', '', r.text)
+                new_text = re.sub(r'\[.*?\]', '', t, flags=re.DOTALL).strip()
+                rewrite_para(para, new_text)
 
     # Handle tables
     for table in doc.tables:
